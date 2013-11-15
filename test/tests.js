@@ -24,7 +24,61 @@
         ]);
 
         promise.done(function(results) {
-            deepEqual(results, [ [ 1 ], [ 2 ] ]);
+            deepEqual(results, [ 1, 2 ]);
+        }).always(function() {
+            start();
+        });
+    });
+
+    asyncTest("test series with methods with multiple results", function() {
+        expect(1);
+
+        var promise = promiseflow.series([
+            function() {
+                var d = $.Deferred();
+                setTimeout(function(){
+                    d.resolve(1, 2);
+                }, 20);
+                return d.promise();
+            },
+            function() {
+                var d = $.Deferred();
+                setTimeout(function(){
+                    d.resolve(3, 4);
+                }, 10);
+                return d.promise();
+            }
+        ]);
+
+        promise.done(function(results) {
+            deepEqual(results, [ [ 1, 2 ], [ 3, 4 ] ]);
+        }).always(function() {
+            start();
+        });
+    });
+
+    asyncTest("test series with methods with no results", function() {
+        expect(1);
+
+        var promise = promiseflow.series([
+            function() {
+                var d = $.Deferred();
+                setTimeout(function(){
+                    d.resolve();
+                }, 20);
+                return d.promise();
+            },
+            function() {
+                var d = $.Deferred();
+                setTimeout(function(){
+                    d.resolve();
+                }, 10);
+                return d.promise();
+            }
+        ]);
+
+        promise.done(function(results) {
+            deepEqual(results, [ undefined, undefined ]);
         }).always(function() {
             start();
         });
@@ -51,7 +105,7 @@
         ]);
 
         promise.fail(function(results) {
-            deepEqual(results, [ [ 1 ] ]);
+            deepEqual(results, [ 1 ]);
         }).always(function() {
             start();
         });
@@ -78,7 +132,7 @@
         });
 
         promise.done(function(results) {
-            deepEqual(results, { one: [ 1 ], two: [ 2 ] });
+            deepEqual(results, { one: 1, two: 2 });
         }).always(function() {
             start();
         });
@@ -105,7 +159,7 @@
         });
 
         promise.fail(function(results) {
-            deepEqual(results, { one: [ 1 ] });
+            deepEqual(results, { one: 1 });
         }).always(function() {
             start();
         });
@@ -132,7 +186,7 @@
         ]);
 
         promise.done(function(results) {
-            deepEqual(results, [ [ 1 ], [ 2 ] ]);
+            deepEqual(results, [ 1, 2 ]);
         }).always(function() {
             start();
         });
@@ -159,7 +213,7 @@
         });
 
         promise.done(function(results) {
-            deepEqual(results, { one: [ 1 ], two: [ 2 ] });
+            deepEqual(results, { one: 1, two: 2 });
         }).always(function() {
             start();
         });
