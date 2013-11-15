@@ -1,0 +1,16 @@
+{
+  "name": "promiseflow",
+  "version": "0.0.1",
+  "author": "Jeff Cooper <jeff@cuperman.net>",
+  "description": "Asynchronous flow control for methods that return promises",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cuperman/promiseflow"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-jshint": "~0.7.1",
+    "grunt-contrib-qunit": "~0.3.0"
+  },
+  "license": "MIT"
+}
