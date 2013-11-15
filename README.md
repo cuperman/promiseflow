@@ -6,7 +6,7 @@ This library provides wrapper methods for various features of [async.js](https:/
 
 ## Example
 
-Assume you have a couple functions which return promises, and you want to execute them in parallel, and collect the results when both are complete.
+Assume you have a couple functions which return promises, and you want to execute them in parallel, and collect the results when both are complete:
 
 ```
 var getFoo = function() {
@@ -17,18 +17,24 @@ var getBar = function() {
     return $.get("/api/bar");
 };
 
-promiseflow.parallel([getFoo, getBar], function(err, results) {
-    if (err) {
+promiseflow.parallel([getFoo, getBar])
+    .fail(function() {
         console.error("an error ocurred");
-    } else {
+    })
+    .done(function(results) {
         var foo = results[0],
             bar = results[1];
-            
+                
         console.log("foo", foo);
         console.log("bar", bar);
-    }
-});
+    });
 ```
+
+Notice that the promiseflow methods also return promises.
+
+## Dependencies
+
+PromiseFlow depends on [jquery](http://jquery.com) and [async.js](https://github.com/caolan/async).
 
 ## Supported Methods
 

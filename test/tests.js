@@ -4,9 +4,9 @@
     'use strict';
 
     asyncTest("test series as array", function() {
-        expect(2);
+        expect(1);
 
-        promiseflow.series([
+        var promise = promiseflow.series([
             function() {
                 var d = $.Deferred();
                 setTimeout(function(){
@@ -21,18 +21,19 @@
                 }, 10);
                 return d.promise();
             }
-        ],
-        function(err, results) {
-            equal(err, null);
+        ]);
+
+        promise.done(function(results) {
             deepEqual(results, [ [ 1 ], [ 2 ] ]);
+        }).always(function() {
             start();
         });
     });
 
     asyncTest("test series as array error", function() {
-        expect(2);
+        expect(1);
 
-        promiseflow.series([
+        var promise = promiseflow.series([
             function() {
                 var d = $.Deferred();
                 setTimeout(function(){
@@ -47,18 +48,19 @@
                 }, 10);
                 return d.promise();
             }
-        ],
-        function(err, results) {
-            equal(err, true);
+        ]);
+
+        promise.fail(function(results) {
             deepEqual(results, [ [ 1 ] ]);
+        }).always(function() {
             start();
         });
     });
 
     asyncTest("test series as object", function() {
-        expect(2);
+        expect(1);
 
-        promiseflow.series({
+        var promise = promiseflow.series({
             one: function() {
                 var d = $.Deferred();
                 setTimeout(function(){
@@ -73,18 +75,19 @@
                 }, 10);
                 return d.promise();
             }
-        },
-        function(err, results) {
-            equal(err, null);
+        });
+
+        promise.done(function(results) {
             deepEqual(results, { one: [ 1 ], two: [ 2 ] });
+        }).always(function() {
             start();
         });
     });
 
     asyncTest("test series as object error", function() {
-        expect(2);
+        expect(1);
 
-        promiseflow.series({
+        var promise = promiseflow.series({
             one: function() {
                 var d = $.Deferred();
                 setTimeout(function(){
@@ -99,18 +102,19 @@
                 }, 10);
                 return d.promise();
             }
-        },
-        function(err, results) {
-            equal(err, true);
+        });
+
+        promise.fail(function(results) {
             deepEqual(results, { one: [ 1 ] });
+        }).always(function() {
             start();
         });
     });
 
     asyncTest("test parallel as array", function() {
-        expect(2);
+        expect(1);
 
-        promiseflow.parallel([
+        var promise = promiseflow.parallel([
             function() {
                 var d = $.Deferred();
                 setTimeout(function(){
@@ -125,18 +129,19 @@
                 }, 10);
                 return d.promise();
             }
-        ],
-        function(err, results) {
-            equal(err, null);
+        ]);
+
+        promise.done(function(results) {
             deepEqual(results, [ [ 1 ], [ 2 ] ]);
+        }).always(function() {
             start();
         });
     });
 
     asyncTest("test parallel as object", function() {
-        expect(2);
+        expect(1);
 
-        promiseflow.parallel({
+        var promise = promiseflow.parallel({
             one: function() {
                 var d = $.Deferred();
                 setTimeout(function(){
@@ -151,10 +156,11 @@
                 }, 10);
                 return d.promise();
             }
-        },
-        function(err, results) {
-            equal(err, null);
+        });
+
+        promise.done(function(results) {
             deepEqual(results, { one: [ 1 ], two: [ 2 ] });
+        }).always(function() {
             start();
         });
     });
