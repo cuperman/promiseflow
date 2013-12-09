@@ -2,39 +2,40 @@
 
 Asynchronous flow control for methods that return promises
 
-This library provides wrapper methods for various features of [async.js](https://github.com/caolan/async), but is friendly with promises.
-
 ## Example
 
-Assume you have a couple functions which return promises, and you want to execute them in parallel, and collect the results when both are complete:
+Assume you have a few asynchronous functions to execute in parallel, and you want to process all results when complete:
 
 ```
-var getFoo = function() {
-    return $.get("/api/foo");
-};
+// execute multiple async functions in parallel
+var p = promiseflow.parallel({
+    people: function() { return $.get("/api/people"); }, 
+    places: function() { return $.get("/api/places"); },
+    things: function() { return $.get("/api/things"); }
+});
 
-var getBar = function() {
-    return $.get("/api/bar");
-};
+// when all functions are complete, all results are available in a single callback
+p.done(function(results) {
+    var people = results.people[0],
+        places = results.places[0],
+        things = results.things[0];
+            
+    doSomethingWith(people, places, things);
+});
 
-promiseflow.parallel([getFoo, getBar])
-    .fail(function() {
-        console.error("an error ocurred");
-    })
-    .done(function(results) {
-        var foo = results[0],
-            bar = results[1];
-                
-        console.log("foo", foo);
-        console.log("bar", bar);
-    });
+// and you can also handle failures
+p.fail(function(index, results) {
+    var jqXHR = results[0],
+        textStatus = results[1],
+        errorThrown = results[2];
+        
+    console.error("failed to retrieve: " + index, errorThrown);
+});
 ```
-
-Notice that the promiseflow methods also return promises.
 
 ## Dependencies
 
-PromiseFlow depends on [jquery](http://jquery.com) and [async.js](https://github.com/caolan/async).
+PromiseFlow depends on [jquery](http://jquery.com)
 
 ## Supported Methods
 
