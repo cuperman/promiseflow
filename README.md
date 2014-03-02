@@ -38,6 +38,7 @@ PromiseFlow depends on [jQuery](http://jquery.com)
 * times
 * waterfall
 * throttle
+* defer
 
 ## Old Example
 

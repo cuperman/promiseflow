@@ -3,6 +3,12 @@
 
     module("parallel");
 
+    var foo = promiseflow.defer(function(d, sleep) {
+        setTimeout(function() {
+            d.resolve();
+        }, sleep);
+    });
+
     asyncTest("test parallel as array", function() {
         expect(1);
 

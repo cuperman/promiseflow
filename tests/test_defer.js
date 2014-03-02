@@ -3,8 +3,14 @@
 
     module("defer");
 
-    test("should return a promise object", function() {
-        var p = promiseflow.defer();
+    test("should return a function", function() {
+        equal(typeof promiseflow.defer(), "function", "it should be a function");
+    });
+
+    test("deferred function should return a promise object", function() {
+        var p = promiseflow.defer(function(d) {
+            return d.resolve();
+        })();
 
         equal(typeof p, "object", "it should be an object");
 
@@ -17,7 +23,7 @@
         ok(!p.reject, "it should not have a reject method");
     });
 
-    asyncTest("should pass a deferred object to the callback", function() {
+    asyncTest("deferred function should pass a deferred object to the callback", function() {
         expect(3);
 
         promiseflow.defer(function(d) {
@@ -27,28 +33,41 @@
             ok(d.reject, "it should have a reject method");
 
             start();
-        });
+        })();
     });
 
-    asyncTest("should be done when deferred is resolved", function() {
+    asyncTest("deferred function should pass arguments to the callback", function() {
+        expect(2);
+
+        promiseflow.defer(function(d, foo, bar) {
+            equal(foo, "FOO");
+            equal(bar, "BAR");
+
+            start();
+        })("FOO", "BAR");
+    });
+
+    asyncTest("deferred function should be done when deferred is resolved", function() {
         expect(1);
 
-        promiseflow.defer(function(d) {
+        var p = promiseflow.defer(function(d) {
             d.resolve();
-        })
-        .done(function() {
+        })();
+
+        p.done(function() {
             ok(true);
             start();
         });
     });
 
-    asyncTest("should fail when deferred is rejected", function() {
+    asyncTest("deferred function should fail when deferred is rejected", function() {
         expect(1);
 
-        promiseflow.defer(function(d) {
+        var p = promiseflow.defer(function(d) {
             d.reject();
-        })
-        .fail(function() {
+        })();
+
+        p.fail(function() {
             ok(true);
             start();
         });
