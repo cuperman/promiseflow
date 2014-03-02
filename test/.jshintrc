@@ -1,0 +1,23 @@
+{
+    // enforcing
+    "undef": true,
+    "strict": true,
+
+    // environments
+    "browser": true,
+    "jquery": true,
+
+    // globals
+    "globals": {
+        "asyncTest": true,
+        "equal": true,
+        "expect": true,
+        "deepEqual": true,
+        "module": true,
+        "ok": true,
+        "start": true,
+        "test": true,
+
+        "promiseflow": true
+    }
+}
