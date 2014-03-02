@@ -2,7 +2,7 @@
   "name": "promiseflow",
   "version": "0.0.1",
   "author": "Jeff Cooper <jeff@cuperman.net>",
-  "description": "Asynchronous flow control for methods that return promises",
+  "description": "Asynchronous flow control with promises",
   "repository": {
     "type": "git",
     "url": "https://github.com/cuperman/promiseflow"

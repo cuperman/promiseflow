@@ -5,14 +5,14 @@ module.exports = function(grunt) {
 
     grunt.initConfig({
         jshint: {
-            files: ['Gruntfile.js', 'lib/*.js', 'test/*.js'],
+            files: ['Gruntfile.js', 'src/*.js', 'tests/*.js'],
             options: {
                 jshintrc: true
             }
         },
 
         qunit: {
-            files: ['test/*.html']
+            files: ['tests/*.html']
         }
     });
 
