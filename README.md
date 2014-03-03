@@ -32,41 +32,75 @@ PromiseFlow depends on [jQuery](http://jquery.com)
 
 ## Supported Methods
 
+* defer
 * series
 * parallel
-* each
-* times
-* waterfall
-* throttle
-* defer
+* each (coming soon)
+* times (comming soon)
+* waterfall (coming soon)
+* throttle (coming soon)
 
-## Old Example
+### defer
 
-Assume you have a few asynchronous functions to execute in parallel, and you want to process all results when complete:
+### series
+
+Executes functions in series
+
+`promiseflow.series(collection, options)`
+
+collection: either an array or object
+
+options:
+
+* context: binds to 'this'
+* results: "all" to return an array of results from each function, or "first" to return only the first value in the response (default: first)
+
+returns: promise
+
+Example:
 
 ```
-// execute multiple async functions in parallel
-var p = promiseflow.parallel({
-    people: function() { return $.get("/api/people"); }, 
-    places: function() { return $.get("/api/places"); },
-    things: function() { return $.get("/api/things"); }
-});
+var foo = function() {
+    return $.get("/foo");
+};
 
-// when all functions are complete, all results are available in a single callback
+var bar = function() {
+    return $.get("/bar");
+};
+
+// array notation
+promiseflow.series([foo, bar])
+    .done(function(results) {
+        // results is an array with responses from each function
+        console.debug("foo response", results[0]);
+        console.debug("bar response", results[1]);
+    });
+    
+// object notation, with 'all' results option
+var p = promiseflow.series({
+    foo: foo,
+    bar: bar
+}, { results: "all" });
+
 p.done(function(results) {
-    var people = results.people[0],
-        places = results.places[0],
-        things = results.things[0];
-            
-    doSomethingWith(people, places, things);
+    // results is an object with responses from each function
+    // each response is an array containing all results from each promise
+    console.debug("foo data", results.foo[0]);
+    console.debug("foo status", results.foo[1]);
+    console.debug("foo jqXHR", results.foo[2]);
+    
+    console.debug("bar data", results.bar[0]);
+    console.debug("bar status", results.bar[1]);
+    console.debug("bar jqXHR", results.bar[2]);
 });
 
-// and you can also handle failures
-p.fail(function(index, results) {
-    var jqXHR = results[0],
-        textStatus = results[1],
-        errorThrown = results[2];
-        
-    console.error("failed to retrieve: " + index, errorThrown);
-});
+
 ```
+
+
+### parallel
+
+options: 
+
+* context
+* results

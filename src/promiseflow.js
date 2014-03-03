@@ -24,6 +24,11 @@
         }
     };
 
+    var _defaultOptions = {
+        context: null,
+        results: "first"
+    };
+
     var promiseflow = {
         defer: function(callback, context) {
             return function() {
@@ -35,10 +40,12 @@
             };
         },
 
-        series: function(methods, context) {
+        series: function(methods, options) {
             var d = $.Deferred(),
                 keys = _keys(methods),
                 results = _isArray(methods) ? [] : {};
+
+            options = $.extend({}, _defaultOptions, options);
 
             var execute = function(index) {
                 var key = keys[index],
@@ -47,15 +54,15 @@
                 if (!method) {
                     d.resolve(results);
                 } else {
-                    var p = method.call(context);
+                    var p = method.call(options.context);
 
-                    p.done(function() {
-                        results[key] = _toArray(arguments);
+                    p.done(function(response) {
+                        results[key] = options.results === "all" ? _toArray(arguments) : response;
                         execute(index + 1);
                     });
 
-                    p.fail(function() {
-                        d.reject(key, _toArray(arguments));
+                    p.fail(function(response) {
+                        d.reject(key, options.results === "all" ? _toArray(arguments) : response);
                     });
                 }
             };
@@ -65,25 +72,27 @@
             return d.promise();
         },
 
-        parallel: function(methods, context) {
+        parallel: function(methods, options) {
             var d = $.Deferred(),
                 keys = _keys(methods),
                 results = _isArray(methods) ? [] : {},
                 counter = 0;
 
-            _each(methods, function(method, index) {
-                var p = method.call(context);
+            options = $.extend({}, _defaultOptions, options);
 
-                p.done(function() {
-                    results[index] = _toArray(arguments);
+            _each(methods, function(method, index) {
+                var p = method.call(options.context);
+
+                p.done(function(response) {
+                    results[index] = options.results === "all" ? _toArray(arguments) : response;
                     counter++;
                     if (counter === keys.length) {
                         d.resolve(results);
                     }
                 });
 
-                p.fail(function() {
-                    d.reject(index, _toArray(arguments));
+                p.fail(function(response) {
+                    d.reject(index, options.results === "all" ? _toArray(arguments) : response);
                 });
             });
 

@@ -27,7 +27,7 @@
                 }, 10);
                 return d.promise();
             }
-        ]);
+        ], {results: "all"});
 
         promise.done(function(results) {
             deepEqual(results, [ [1], [2] ]);
@@ -54,7 +54,7 @@
                 }, 10);
                 return d.promise();
             }
-        ]);
+        ], {results: "all"});
 
         promise.done(function(results) {
             deepEqual(results, [ [1, 2], [3, 4] ]);
@@ -81,7 +81,7 @@
                 }, 10);
                 return d.promise();
             }
-        ]);
+        ], {results: "all"});
 
         promise.done(function(results) {
             deepEqual(results, [[], []]);
@@ -108,7 +108,7 @@
                 }, 10);
                 return d.promise();
             }
-        ]);
+        ], {results: "all"});
 
         promise.fail(function(index, results) {
             equal(index, 0);
@@ -136,7 +136,7 @@
                 }, 10);
                 return d.promise();
             }
-        });
+        }, {results: "all"});
 
         promise.done(function(results) {
             deepEqual(results, { one: [1], two: [2] });
@@ -163,7 +163,7 @@
                 }, 10);
                 return d.promise();
             }
-        });
+        }, {results: "all"});
 
         promise.fail(function(index, results) {
             equal(index, "one");
